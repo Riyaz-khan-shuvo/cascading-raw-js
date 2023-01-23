@@ -1,53 +1,28 @@
-﻿
-/* $('#Country').on('change', function () {
-     var id = $(this).val();
-     $('#State').empty();
-     $('#State').append('<Option>----Select----</Option>');
-     $.ajax({
-         url: '/Cascading/State?id=' + id,
-         success: function (Result) {
-             $.each(Result, function (i, data) {
+﻿const country = document.getElementById("Country");
 
-                 $('#State').append('<Option value=' + data.id + '>' + data.stateName + '</Option>');
-             });
-         }
-     });
- });*/
-
-
-const val = document.getElementById("Country");
-
-val.addEventListener("change", () => {
-    console.log(val.value)
+country.addEventListener("change", () => {
+    fetch(`/Cascading/State?id=${country.value}`)
+        .then(res => res.json())
+        .then(data => {
+            data.map((country, index) => {
+                GetSingleState(country)
+            })
+        })
 })
 
+const state = document.getElementById("State");
 
-/*    $('#State').on('change', function () {
-        var id = $(this).val();
-        $('#City').empty();
-        $('#City').append('<Option>----Select----</Option>');
-        $.ajax({
-            url: '/Cascading/City?id=' + id,
-            success: function (Result) {
-                $.each(Result, function (i, data) {
-
-                    $('#City').append('<Option value=' + data.id + '>' + data.cityName + '</Option>');
-                });
-            }
-        });
-    });*/
-
+state.addEventListener("change", () => {
+    fetch(`/Cascading/city?id=${state.value}`)
+        .then(res => res.json())
+        .then(data => {
+            data.map((country, index) => {
+                GetSingleCity(country)
+            })
+        })
+})
 
 function GetCountry() {
-    /*$.ajax({
-        url: '/Cascading/Country',
-        success: function (result) {
-            $.each(result, function (i, data) {
-                $('#Country').append('<Option value=' + data.id + '>' + data.countryName + '<Option>');
-            });
-        }
-    });*/
-
     fetch("/cascading/country")
         .then(res => res.json())
         .then(data => {
@@ -56,11 +31,27 @@ function GetCountry() {
             })
         })
 }
-
+GetCountry();
 function GetSingleCountry(data) {
+    console.log(data)
     const a = document.createElement("option")
     a.innerText = data.countryName;
     a.value = data.id;
     document.getElementById("Country").appendChild(a);
 }
 
+function GetSingleState(data) {
+    console.log(data)
+    const a = document.createElement("option")
+    a.innerText = data.stateName;
+    a.value = data.id;
+    document.getElementById("State").appendChild(a);
+}
+
+function GetSingleCity(data) {
+    console.log(data)
+    const a = document.createElement("option")
+    a.innerText = data.cityName;
+    a.value = data.id;
+    document.getElementById("City").appendChild(a);
+}
